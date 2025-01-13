@@ -1,12 +1,9 @@
-import { redirect } from 'next/navigation'
-
 import FeedWrapper from '@/components/feed-wrapper'
 import StickyWrapper from '@/components/sticky-wrapper'
-import UserProgress from '@/components/user-progress'
-
 import Header from './Header'
-
+import UserProgress from '@/components/user-progress'
 import { getUserProgress } from '@/database/queries'
+import { redirect } from 'next/navigation'
 
 export default async function Learn() {
   const userProgressData = await getUserProgress()

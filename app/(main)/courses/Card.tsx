@@ -22,6 +22,7 @@ export function Card({
 }: Props) {
   return (
     <div
+      onClick={() => onClick(id)}
       className={cn(
         'h-full flex flex-col items-center justify-between border-2 rounded-xl border-b-4 active:border-b-2 hover:bg-black/5 min-h-[217px] min-w-[200px] p-3 pb-6 cursor-pointer',
         disabled && 'pointer-events-none opacity-'
