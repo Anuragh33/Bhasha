@@ -1,5 +1,4 @@
 import { getCourses, getUserProgress } from '@/database/queries'
-
 import { List } from './List'
 
 export default async function Courses() {

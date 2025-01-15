@@ -19,7 +19,9 @@ export function List({ courses, activeCourseId }: Props) {
   const onClick = (id: number) => {
     if (pending) return
 
-    if (id === activeCourseId) return router.push('/learn')
+    if (id === activeCourseId) {
+      return router.push('/learn')
+    }
 
     startTransition(() => {
       upsertUserProgress(id).catch(() => toast.error('Something went wrong!!'))
