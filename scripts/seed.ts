@@ -16,14 +16,21 @@ const main = async () => {
     await db.delete(schema.courses)
 
     await db.delete(schema.userProgress)
+    await db.delete(schema.units)
+    await db.delete(schema.lessons)
+    await db.delete(schema.challenges)
+    await db.delete(schema.challengeOptions)
+    await db.delete(schema.challengeProgress)
 
-    setTimeout(() => console.log('Adding Courses....'), 1500)
+    setTimeout(() => console.log('Previous data is deleted....'), 2000)
+
+    setTimeout(() => console.log('Adding new data....'), 3500)
 
     await db.insert(schema.courses).values([
       {
         id: 1,
-        title: 'Croatian',
-        imageSrc: '/hr.svg',
+        title: 'Spanish',
+        imageSrc: '/es.svg',
       },
       {
         id: 2,
@@ -32,8 +39,8 @@ const main = async () => {
       },
       {
         id: 3,
-        title: 'Spanish',
-        imageSrc: '/es.svg',
+        title: 'Croatian',
+        imageSrc: '/hr.svg',
       },
       {
         id: 4,
@@ -52,7 +59,63 @@ const main = async () => {
       },
     ])
 
-    setTimeout(() => console.log('Seeding Finished....'), 4000)
+    await db.insert(schema.units).values([
+      {
+        id: 1,
+        courseId: 1,
+        title: 'Unit 1 ',
+        description: 'Learn the basics of Spanish',
+        order: 1,
+      },
+    ])
+
+    await db.insert(schema.lessons).values([
+      {
+        id: 1,
+        unitId: 1,
+        order: 1,
+        title: 'Nouns',
+      },
+    ])
+
+    await db.insert(schema.challenges).values([
+      {
+        id: 1,
+        lessonId: 1,
+        type: 'SELECT',
+        order: 1,
+        question: 'Which one these translates to "the man"?',
+      },
+    ])
+
+    await db.insert(schema.challengeOptions).values([
+      {
+        id: 1,
+        challengeId: 1,
+        correctOption: true,
+        text: 'el hombre',
+        audioSrc: '/es_man.mp3',
+        imageSrc: 'man.svg',
+      },
+      {
+        id: 2,
+        challengeId: 1,
+        correctOption: false,
+        text: 'la mujer',
+        audioSrc: '/es_woman.mp3',
+        imageSrc: 'woman.svg',
+      },
+      {
+        id: 3,
+        challengeId: 1,
+        correctOption: false,
+        text: 'el robot',
+        audioSrc: '/es_robot.mp3',
+        imageSrc: 'robot.svg',
+      },
+    ])
+
+    setTimeout(() => console.log('Seeding Finished....'), 7000)
   } catch (error) {
     console.log(error)
     throw new Error('Failed to seed database.')
