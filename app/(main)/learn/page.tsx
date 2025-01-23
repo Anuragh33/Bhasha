@@ -1,10 +1,13 @@
-import FeedWrapper from '@/components/feed-wrapper'
-import StickyWrapper from '@/components/sticky-wrapper'
-import Header from './Header'
-import UserProgress from '@/components/user-progress'
-import { getUnits, getUserProgress } from '@/database/queries'
 import { redirect } from 'next/navigation'
-import Unit from './Unit'
+
+import { FeedWrapper } from '@/components/feed-wrapper'
+import { StickyWrapper } from '@/components/sticky-wrapper'
+import { UserProgress } from '@/components/user-progress'
+
+import { getUnits, getUserProgress } from '@/database/queries'
+
+import { Header } from './Header'
+import { Unit } from './Unit'
 
 export default async function Learn() {
   const userProgressData = getUserProgress()
@@ -28,21 +31,19 @@ export default async function Learn() {
       </StickyWrapper>
       <FeedWrapper>
         <Header title={userProgress.activeCourse.title} />
-        {units.map((unit) => {
-          return (
-            <div key={unit.id} className="mb-10">
-              <Unit
-                id={unit.id}
-                order={unit.order}
-                description={unit.description}
-                title={unit.title}
-                lessons={unit.lessons}
-                activeLesson={undefined}
-                activeLessonPercentage={0}
-              />
-            </div>
-          )
-        })}
+        {units.map((unit) => (
+          <div key={unit.id} className="mb-10">
+            <Unit
+              id={unit.id}
+              order={unit.order}
+              description={unit.description}
+              title={unit.title}
+              lessons={unit.lessons}
+              activeLesson={undefined}
+              activeLessonPercentage={0}
+            />
+          </div>
+        ))}
       </FeedWrapper>
     </div>
   )

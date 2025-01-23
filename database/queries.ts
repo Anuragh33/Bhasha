@@ -2,7 +2,7 @@
 import { cache } from 'react'
 import db from './drizzle'
 import { auth } from '@clerk/nextjs/server'
-import { eq } from 'drizzle-orm'
+import { asc, eq } from 'drizzle-orm'
 import {
   challengeProgress,
   challenges,
@@ -17,6 +17,8 @@ export const getCourses = cache(async () => {
 
   return data
 })
+
+////////////////////////////////////////////////////////////////////////////////////
 
 export const getUserProgress = cache(async () => {
   const { userId } = await auth()
@@ -33,11 +35,9 @@ export const getUserProgress = cache(async () => {
   return data
 })
 
+////////////////////////////////////////////////////////////////////////////////////
+
 export const getCourseById = cache(async (courseId: number) => {
-  const { userId } = await auth()
-
-  if (!userId) return null
-
   const data = db.query.courses.findFirst({
     where: eq(courses.id, courseId),
   })
@@ -45,11 +45,15 @@ export const getCourseById = cache(async (courseId: number) => {
   return data
 })
 
+////////////////////////////////////////////////////////////////////////////////////
+
 export const getUnits = cache(async () => {
   const userProgress = await getUserProgress()
   const { userId } = await auth()
 
-  if (!userId || !userProgress?.activeCourseId) return []
+  if (!userId || !userProgress?.activeCourseId) {
+    return []
+  }
 
   const data = await db.query.units.findMany({
     where: eq(units.courseId, userProgress.activeCourseId),
@@ -84,3 +88,98 @@ export const getUnits = cache(async () => {
   })
   return normalizedData
 })
+
+////////////////////////////////////////////////////////////////////////////////////
+
+const getCourseProgress = cache(async () => {
+  const { userId } = await auth()
+  const userProgress = await getUserProgress()
+
+  if (!userId || !userProgress || !userProgress.activeCourseId) return null
+
+  const unitsInActiveCourse = await db.query.units.findMany({
+    orderBy: [asc(units.order)],
+    where: eq(units.courseId, userProgress.activeCourseId),
+    with: {
+      lessons: {
+        orderBy: [asc(lessons.order)],
+        with: {
+          unit: true,
+          challenges: {
+            with: {
+              challengeProgress: {
+                where: eq(challengeProgress.userId, userId),
+              },
+            },
+          },
+        },
+      },
+    },
+  })
+
+  const firstUncompletedLesson = unitsInActiveCourse
+    .flatMap((unit) => unit.lessons)
+    .find((lesson) => {
+      return lesson.challenges.some((challenge) => {
+        return (
+          !challenge.challengeProgress ||
+          (challenge.challengeProgress.length === 0 &&
+            challenge.challengeProgress.every(
+              (progress) => progress.completed === false
+            ))
+        )
+      })
+    })
+
+  return {
+    activeLesson: firstUncompletedLesson,
+    activeLessonid: firstUncompletedLesson?.id,
+  }
+})
+////////////////////////////////////////////////////////////////////////////////////
+
+const getLesson = cache(async (id?: number) => {
+  const { userId } = await auth()
+  const courseProgress = await getCourseProgress()
+
+  if (
+    !userId ||
+    !courseProgress ||
+    !courseProgress.activeLessonid ||
+    !courseProgress.activeLesson
+  )
+    return null
+
+  const lessonId = id || courseProgress.activeLessonid
+
+  if (!lessonId) return null
+
+  const data = await db.query.lessons.findFirst({
+    where: eq(lessons.id, lessonId),
+    with: {
+      challenges: {
+        orderBy: [asc(challenges.order)],
+        with: {
+          challengeOptions: true,
+          challengeProgress: {
+            where: eq(challengeProgress.userId, userId),
+          },
+        },
+      },
+    },
+  })
+
+  if (!data || !data.challenges) return null
+
+  const normalizedChallenges = data.challenges.map((challenge) => {
+    const completed =
+      challenge.challengeProgress &&
+      challenge.challengeProgress.length > 0 &&
+      challenge.challengeProgress.every((progress) => progress.completed)
+
+    return { ...challenge, completed }
+  })
+
+  return { ...data, challenges: normalizedChallenges }
+})
+////////////////////////////////////////////////////////////////////////////////////

@@ -11,7 +11,7 @@ type Props = {
   activeProject: typeof courses.$inferSelect
 }
 
-export default function UserProgress({
+export function UserProgress({
   hasActiveSubscription,
   hearts,
   points,
@@ -20,16 +20,13 @@ export default function UserProgress({
   return (
     <div className="flex items-center justify-between w-full gap-x-2">
       <Link href="/courses">
-        <Button
-          variant="ghost"
-          // className="border-[0.8px] border-neutral-400"
-        >
+        <Button variant="ghost">
           <Image
             alt={activeProject.title}
             src={activeProject.imageSrc}
             width={32}
             height={32}
-            className=" shadow-lg"
+            className="rounded-md border"
           />
         </Button>
       </Link>
@@ -50,8 +47,8 @@ export default function UserProgress({
           <Image
             alt="Hearts"
             src="/heart.svg"
-            width={28}
-            height={28}
+            width={22}
+            height={22}
             className="mr-2"
           />
           {hasActiveSubscription ? (

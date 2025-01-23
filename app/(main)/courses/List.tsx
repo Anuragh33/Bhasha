@@ -4,7 +4,7 @@ import { courses, userProgress } from '@/database/schema'
 import { Card } from './Card'
 import { useRouter } from 'next/navigation'
 import { useTransition } from 'react'
-import { upsertUserProgress } from '@/actions/user-progress'
+import { upsertUserProgress } from '@/actions/upsertUserProgress'
 import { toast } from 'sonner'
 
 type Props = {
@@ -23,8 +23,14 @@ export function List({ courses, activeCourseId }: Props) {
       return router.push('/learn')
     }
 
-    startTransition(() => {
-      upsertUserProgress(id).catch(() => toast.error('Something went wrong!!'))
+    startTransition(async () => {
+      try {
+        const redirectPath = await upsertUserProgress(id)
+        router.push(redirectPath)
+      } catch (error) {
+        toast.error('Something went wrong!!')
+        console.error(error)
+      }
     })
   }
 

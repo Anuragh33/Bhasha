@@ -1,5 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { lessons, units } from '@/database/schema'
-import LessonButton from './LessonButton'
+import { LessonButton } from './LessonButton'
 import { UnitBanner } from './UnitBanner'
 
 type Props = {
@@ -18,7 +19,7 @@ type Props = {
   activeLessonPercentage: number
 }
 
-export default function Unit({
+export function Unit({
   id,
   order,
   description,
@@ -34,7 +35,8 @@ export default function Unit({
       <div className="flex items-center flex-col relative">
         {lessons.map((lesson, index) => {
           const isCurrent = lesson.id === activeLesson?.id
-          const isLocked = !isCurrent || !lesson.completed
+
+          const isLocked = !lesson.completed && !isCurrent
 
           return (
             <LessonButton
@@ -42,7 +44,7 @@ export default function Unit({
               id={lesson.id}
               index={index}
               totalCount={lessons.length - 1}
-              currrent={isCurrent}
+              current={isCurrent}
               locked={isLocked}
               percentage={activeLessonPercentage}
             />

@@ -5,12 +5,13 @@ import { getCourseById, getUserProgress } from '@/database/queries'
 import { userProgress } from '@/database/schema'
 import { auth, currentUser } from '@clerk/nextjs/server'
 import { revalidatePath } from 'next/cache'
-import { redirect } from 'next/navigation'
 
 export const upsertUserProgress = async (courseId: number) => {
   const { userId } = await auth()
 
   const user = await currentUser()
+
+  // throw new Error('djbfsj')
 
   if (!userId || !user) {
     throw new Error(
@@ -39,19 +40,42 @@ export const upsertUserProgress = async (courseId: number) => {
       userName: user.firstName || 'User',
       userImage: user.imageUrl || '/mascot.svg',
     })
-    revalidatePath('/courses')
-    revalidatePath('/learn')
-    redirect('/learn')
+  } else {
+    await db.insert(userProgress).values({
+      userId,
+      activeCourseId: courseId,
+      userName: user.firstName || 'User',
+      userImage: user.imageUrl || '/mascot.svg',
+    })
   }
-
-  await db.insert(userProgress).values({
-    userId,
-    activeCourseId: courseId,
-    userName: user.firstName || 'User',
-    userImage: user.imageUrl || '/mascot.svg',
-  })
 
   revalidatePath('/courses')
   revalidatePath('/learn')
-  redirect('/learn')
+  // Using redirect causing an error NEXT_REDIRECT
+  //  inplace of two redirect's we are using only one return while using if else statments
+  //  The unmodified code can be seen below
+
+  return '/learn'
+
+  // if (existingUserProgress) {
+  //   await db.update(userProgress).set({
+  //     activeCourseId: courseId,
+  //     userName: user.firstName || 'User',
+  //     userImage: user.imageUrl || '/mascot.svg',
+  //   })
+  //   revalidatePath('/courses')
+  //   revalidatePath('/learn')
+  //   redirect('/learn')
+  // }
+
+  // await db.insert(userProgress).values({
+  //   userId,
+  //   activeCourseId: courseId,
+  //   userName: user.firstName || 'User',
+  //   userImage: user.imageUrl || '/mascot.svg',
+  // })
+
+  // revalidatePath('/courses')
+  // revalidatePath('/learn')
+  // redirect('/learn')
 }

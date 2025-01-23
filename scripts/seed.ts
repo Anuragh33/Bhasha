@@ -76,6 +76,30 @@ const main = async () => {
         order: 1,
         title: 'Nouns',
       },
+      {
+        id: 2,
+        unitId: 1,
+        order: 2,
+        title: 'Verbs',
+      },
+      {
+        id: 3,
+        unitId: 1,
+        order: 3,
+        title: 'Adjectives',
+      },
+      {
+        id: 4,
+        unitId: 1,
+        order: 4,
+        title: 'Adverbs',
+      },
+      {
+        id: 5,
+        unitId: 1,
+        order: 5,
+        title: 'Punctuation',
+      },
     ])
 
     await db.insert(schema.challenges).values([
@@ -118,7 +142,7 @@ const main = async () => {
     setTimeout(() => console.log('Seeding Finished....'), 7000)
   } catch (error) {
     console.log(error)
-    throw new Error('Failed to seed database.')
+    throw new Error('Failed to seed the database.')
   }
 }
 
