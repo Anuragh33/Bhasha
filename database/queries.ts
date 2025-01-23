@@ -91,7 +91,7 @@ export const getUnits = cache(async () => {
 
 ////////////////////////////////////////////////////////////////////////////////////
 
-const getCourseProgress = cache(async () => {
+export const getCourseProgress = cache(async () => {
   const { userId } = await auth()
   const userProgress = await getUserProgress()
 
@@ -138,7 +138,7 @@ const getCourseProgress = cache(async () => {
 })
 ////////////////////////////////////////////////////////////////////////////////////
 
-const getLesson = cache(async (id?: number) => {
+export const getLessons = cache(async (id?: number) => {
   const { userId } = await auth()
   const courseProgress = await getCourseProgress()
 
@@ -183,3 +183,23 @@ const getLesson = cache(async (id?: number) => {
   return { ...data, challenges: normalizedChallenges }
 })
 ////////////////////////////////////////////////////////////////////////////////////
+
+export const getLessonPercentage = cache(async () => {
+  const courseProgress = await getCourseProgress()
+
+  if (!courseProgress) return 0
+
+  const lessons = await getLessons(courseProgress.activeLessonid)
+
+  if (!lessons) return 0
+
+  const completedChallenges = lessons.challenges.filter(
+    (challenge) => challenge.completed
+  )
+
+  const percentage = Math.round(
+    (completedChallenges.length / lessons.challenges.length) * 100
+  )
+
+  return percentage
+})
