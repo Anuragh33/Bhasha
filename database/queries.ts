@@ -61,6 +61,7 @@ export const getUnits = cache(async () => {
       lessons: {
         with: {
           challenges: {
+            orderBy: [asc(challenges.order)],
             with: {
               challengeProgress: {
                 where: eq(challengeProgress.userId, userId),
@@ -74,6 +75,10 @@ export const getUnits = cache(async () => {
 
   const normalizedData = data.map((unit) => {
     const lessonWithCompletedStatus = unit.lessons.map((lesson) => {
+      if (lesson.challenges.length === 0) {
+        return { ...lesson, completed: false }
+      }
+
       const allCompletedChallenges = lesson.challenges.every((challenge) => {
         return (
           challenge.challengeProgress &&
@@ -138,7 +143,7 @@ export const getCourseProgress = cache(async () => {
 })
 ////////////////////////////////////////////////////////////////////////////////////
 
-export const getLessons = cache(async (id?: number) => {
+export const getLesson = cache(async (id?: number) => {
   const { userId } = await auth()
   const courseProgress = await getCourseProgress()
 
@@ -189,7 +194,7 @@ export const getLessonPercentage = cache(async () => {
 
   if (!courseProgress) return 0
 
-  const lessons = await getLessons(courseProgress.activeLessonid)
+  const lessons = await getLesson(courseProgress.activeLessonid)
 
   if (!lessons) return 0
 
