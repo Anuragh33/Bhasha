@@ -3,6 +3,8 @@
 import { challengeOptions, challenges } from '@/database/schema'
 import { useState } from 'react'
 import Header from './Header'
+import { QuestionBubble } from './QuestionBubble'
+import { Challenge } from './Challenge'
 
 type Props = {
   initialLessonId: number
@@ -37,6 +39,8 @@ export default function Quiz({
 
   const activeChallenge = challenges[activeIndex]
 
+  const options = activeChallenge?.challengeOptions || []
+
   const title =
     activeChallenge.type === 'ASSIST'
       ? 'Select the correct meaning'
@@ -55,7 +59,20 @@ export default function Quiz({
             <h1 className="text-lg lg:text-3xl text-center  lg:text-start font-bold text-neutral-700">
               {title}
             </h1>
-            <div></div>
+            <div>
+              {activeChallenge.type === 'ASSIST' && (
+                <QuestionBubble question={activeChallenge.question} />
+              )}
+
+              <Challenge
+                options={options}
+                onSelect={() => {}}
+                status={'none'}
+                selectedOption={undefined}
+                disabled={false}
+                type={activeChallenge.type}
+              />
+            </div>
           </div>
         </div>
       </div>
