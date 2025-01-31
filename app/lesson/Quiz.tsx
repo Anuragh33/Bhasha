@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 'use client'
 
 import { challengeOptions, challenges } from '@/database/schema'
@@ -5,6 +6,7 @@ import { useState } from 'react'
 import Header from './Header'
 import { QuestionBubble } from './QuestionBubble'
 import { Challenge } from './Challenge'
+import { Footer } from './Footer'
 
 type Props = {
   initialLessonId: number
@@ -25,11 +27,16 @@ export default function Quiz({
   userSubscription,
 }: Props) {
   const [hearts, setHearts] = useState(initialHearts)
+
   const [percentage, setPercentage] = useState(initialPercentage)
 
   const [challenges] = useState(initialChallenges)
 
-  const [activeIndex, setactiveIndex] = useState(() => {
+  const [selectedOption, setSelectedOption] = useState<number>()
+
+  const [status, setStatus] = useState<'correct' | 'wrong' | 'none'>('none')
+
+  const [activeIndex, setActiveIndex] = useState(() => {
     const unfinishedChallengeIndex = challenges.findIndex(
       (challenge) => !challenge.completed
     )
@@ -40,6 +47,39 @@ export default function Quiz({
   const activeChallenge = challenges[activeIndex]
 
   const options = activeChallenge?.challengeOptions || []
+
+  const onSelect = (id: number) => {
+    if (status !== 'none') return
+
+    setSelectedOption(id)
+  }
+
+  const onNext = () => {
+    setActiveIndex((current) => current + 1)
+  }
+
+  const onContinue = () => {
+    if (!selectedOption) return
+
+    if (status === 'wrong') {
+      setStatus('none')
+      setSelectedOption(undefined)
+      return
+    }
+
+    if (status === 'correct') {
+      onNext()
+      setStatus('none')
+      setSelectedOption(undefined)
+      return
+    }
+
+    const correctOption = options.find((option) => option.correctOption)
+
+    if (!correctOption) return
+
+    // if (correctOption.id === selectedOption) return console.log()
+  }
 
   const title =
     activeChallenge.type === 'ASSIST'
@@ -66,9 +106,9 @@ export default function Quiz({
 
               <Challenge
                 options={options}
-                onSelect={() => {}}
-                status={'none'}
-                selectedOption={undefined}
+                onSelect={onSelect}
+                status={status}
+                selectedOption={selectedOption}
                 disabled={false}
                 type={activeChallenge.type}
               />
@@ -76,6 +116,7 @@ export default function Quiz({
           </div>
         </div>
       </div>
+      <Footer status={status} disabled={!selectedOption} onCheck={onContinue} />
     </>
   )
 }
