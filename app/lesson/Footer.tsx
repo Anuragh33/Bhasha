@@ -7,24 +7,13 @@ type Props = {
   status: 'correct' | 'wrong' | 'none' | 'completed'
   onCheck: () => void
   disabled?: boolean
-  lessonId?: boolean
+  lessonId?: number
 }
 
 export function Footer({ status, onCheck, disabled, lessonId }: Props) {
   useKey('Enter', onCheck, {}, [onCheck])
 
-  const isMobile = useMedia('(max-width: 1024px)', false)
-
-  const ButtonStatus =
-    status === 'none'
-      ? 'Check'
-      : status === 'correct'
-      ? 'Next'
-      : status === 'wrong'
-      ? 'Retry'
-      : status === 'completed'
-      ? 'Continue'
-      : ''
+  const isMobile = useMedia('(max-width: 1024px)', true)
 
   return (
     <footer
@@ -63,7 +52,10 @@ export function Footer({ status, onCheck, disabled, lessonId }: Props) {
           size={isMobile ? 'sm' : 'lg'}
           variant={status === 'wrong' ? 'danger' : 'secondary'}
         >
-          {ButtonStatus}
+          {status === 'none' && 'Check'}
+          {status === 'correct' && 'Next'}
+          {status === 'wrong' && 'Retry'}
+          {status === 'completed' && 'Continue'}
         </Button>
       </div>
     </footer>

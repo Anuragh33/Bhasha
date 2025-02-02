@@ -1,12 +1,16 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 'use client'
 
+import { useState, useTransition } from 'react'
+
 import { challengeOptions, challenges } from '@/database/schema'
-import { useState } from 'react'
-import Header from './Header'
+
+import { Header } from './Header'
 import { QuestionBubble } from './QuestionBubble'
 import { Challenge } from './Challenge'
 import { Footer } from './Footer'
+import { upsertChallengeProgress } from '@/actions/upsertChallengeProgress'
+import { toast } from 'sonner'
 
 type Props = {
   initialLessonId: number
@@ -26,6 +30,8 @@ export default function Quiz({
   initialPercentage,
   userSubscription,
 }: Props) {
+  const [isPending, startTransition] = useTransition()
+
   const [hearts, setHearts] = useState(initialHearts)
 
   const [percentage, setPercentage] = useState(initialPercentage)
@@ -37,16 +43,16 @@ export default function Quiz({
   const [status, setStatus] = useState<'correct' | 'wrong' | 'none'>('none')
 
   const [activeIndex, setActiveIndex] = useState(() => {
-    const unfinishedChallengeIndex = challenges.findIndex(
+    const unfinishedIndex = challenges.findIndex(
       (challenge) => !challenge.completed
     )
 
-    return unfinishedChallengeIndex === -1 ? 0 : unfinishedChallengeIndex
+    return unfinishedIndex === -1 ? 0 : unfinishedIndex
   })
 
   const activeChallenge = challenges[activeIndex]
 
-  const options = activeChallenge?.challengeOptions || []
+  const options = activeChallenge?.challengeOptions ?? []
 
   const onSelect = (id: number) => {
     if (status !== 'none') return
@@ -74,11 +80,35 @@ export default function Quiz({
       return
     }
 
-    const correctOption = options.find((option) => option.correctOption)
+    const correctOptionInChallenge = options.find(
+      (option) => option.correctOption
+    )
 
-    if (!correctOption) return
+    if (!correctOptionInChallenge) return
 
-    // if (correctOption.id === selectedOption) return console.log()
+    if (correctOptionInChallenge.id === selectedOption) {
+      startTransition(() => {
+        upsertChallengeProgress(activeChallenge.id)
+          .then((response) => {
+            if (response?.error === 'hearts') {
+              console.error('Missing Hearts!')
+              return
+            }
+
+            setStatus('correct')
+            setPercentage((prev) => prev + 100 / challenges.length)
+
+            if (initialPercentage === 100) {
+              setHearts((prev) => Math.min(prev + 1, 5))
+            }
+          })
+          .catch(() =>
+            toast.error('Something went wrong. Please try again later.')
+          )
+      })
+    } else {
+      console.log()
+    }
   }
 
   const title =
@@ -100,7 +130,7 @@ export default function Quiz({
               {title}
             </h1>
             <div>
-              {activeChallenge.type === 'ASSIST' && (
+              {activeChallenge?.type === 'ASSIST' && (
                 <QuestionBubble question={activeChallenge.question} />
               )}
 
@@ -109,14 +139,18 @@ export default function Quiz({
                 onSelect={onSelect}
                 status={status}
                 selectedOption={selectedOption}
-                disabled={false}
+                disabled={isPending}
                 type={activeChallenge.type}
               />
             </div>
           </div>
         </div>
       </div>
-      <Footer status={status} disabled={!selectedOption} onCheck={onContinue} />
+      <Footer
+        status={status}
+        disabled={isPending || !selectedOption}
+        onCheck={onContinue}
+      />
     </>
   )
 }

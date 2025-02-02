@@ -10,7 +10,7 @@ type Props = {
   hasActiveUserSubscription: boolean
 }
 
-export default function Header({
+export function Header({
   hasActiveUserSubscription,
   hearts,
   percentage,

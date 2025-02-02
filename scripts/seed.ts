@@ -110,11 +110,24 @@ const main = async () => {
         order: 1,
         question: 'Which one these translates to "the man"?',
       },
+      {
+        id: 2,
+        lessonId: 1,
+        type: 'ASSIST',
+        order: 2,
+        question: 'The Man',
+      },
+      {
+        id: 3,
+        lessonId: 1,
+        type: 'SELECT',
+        order: 3,
+        question: 'Which one these translates to "the robot"?',
+      },
     ])
 
     await db.insert(schema.challengeOptions).values([
       {
-        id: 1,
         challengeId: 1,
         correctOption: true,
         text: 'el hombre',
@@ -122,7 +135,6 @@ const main = async () => {
         imageSrc: 'man.svg',
       },
       {
-        id: 2,
         challengeId: 1,
         correctOption: false,
         text: 'la mujer',
@@ -130,9 +142,53 @@ const main = async () => {
         imageSrc: 'woman.svg',
       },
       {
-        id: 3,
         challengeId: 1,
         correctOption: false,
+        text: 'el robot',
+        audioSrc: '/es_robot.mp3',
+        imageSrc: 'robot.svg',
+      },
+    ])
+
+    await db.insert(schema.challengeOptions).values([
+      {
+        challengeId: 2,
+        correctOption: true,
+        text: 'el hombre',
+        audioSrc: '/es_man.mp3',
+      },
+      {
+        challengeId: 2,
+        correctOption: false,
+        text: 'la mujer',
+        audioSrc: '/es_woman.mp3',
+      },
+      {
+        challengeId: 2,
+        correctOption: false,
+        text: 'el robot',
+        audioSrc: '/es_robot.mp3',
+      },
+    ])
+
+    await db.insert(schema.challengeOptions).values([
+      {
+        challengeId: 3,
+        correctOption: false,
+        text: 'el hombre',
+        audioSrc: '/es_man.mp3',
+        imageSrc: 'man.svg',
+      },
+      {
+        challengeId: 3,
+        correctOption: false,
+        text: 'la mujer',
+        audioSrc: '/es_woman.mp3',
+        imageSrc: 'woman.svg',
+      },
+      {
+        challengeId: 3,
+        correctOption: true,
         text: 'el robot',
         audioSrc: '/es_robot.mp3',
         imageSrc: 'robot.svg',

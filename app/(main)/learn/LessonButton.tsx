@@ -3,18 +3,7 @@
 
 import Link from 'next/link'
 
-import {
-  BookCheck,
-  BookmarkCheck,
-  BookOpenCheck,
-  Boxes,
-  Check,
-  Crown,
-  PencilRuler,
-  Ruler,
-  Star,
-  Swords,
-} from 'lucide-react'
+import { Check, Star, Swords } from 'lucide-react'
 
 import { CircularProgressbarWithChildren } from 'react-circular-progressbar'
 
@@ -23,7 +12,6 @@ import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 
 import 'react-circular-progressbar/dist/styles.css'
-import { Rule } from 'postcss'
 
 type Props = {
   id: number

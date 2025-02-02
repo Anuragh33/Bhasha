@@ -1,16 +1,20 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
+'use server'
+
+import { revalidatePath } from 'next/cache'
+
+import { auth } from '@clerk/nextjs/server'
+
+import { and, eq } from 'drizzle-orm'
+
 import db from '@/database/drizzle'
 import { getUserProgress } from '@/database/queries'
 import { challengeProgress, challenges, userProgress } from '@/database/schema'
-import { auth } from '@clerk/nextjs/server'
-import { error } from 'console'
-import { and, eq } from 'drizzle-orm'
-import { revalidatePath } from 'next/cache'
 
-const upsertChallengeProgress = async (challengeId: number) => {
+export const upsertChallengeProgress = async (challengeId: number) => {
   const { userId } = await auth()
 
-  if (!userId) return
+  if (!userId) throw new Error('Unauthorized')
 
   const currentUserProgress = await getUserProgress()
 
@@ -26,12 +30,12 @@ const upsertChallengeProgress = async (challengeId: number) => {
     throw new Error('Challenge not found.')
   }
 
-  const lessonId = challenge?.lessonId
+  const lessonId = challenge.lessonId
 
   const existingChallengeProgress = await db.query.challengeProgress.findFirst({
     where: and(
-      eq(challengeProgress.challengeId, challengeId),
-      eq(challengeProgress.userId, userId)
+      eq(challengeProgress.userId, userId),
+      eq(challengeProgress.challengeId, challengeId)
     ),
   })
 
@@ -52,7 +56,7 @@ const upsertChallengeProgress = async (challengeId: number) => {
     await db
       .update(userProgress)
       .set({
-        hearts: Math.min(currentUserProgress.hearts + 1),
+        hearts: Math.min(currentUserProgress.hearts + 1, 5),
         points: currentUserProgress.points + 10,
       })
       .where(eq(userProgress.userId, userId))
@@ -65,7 +69,7 @@ const upsertChallengeProgress = async (challengeId: number) => {
     return
   }
 
-  await db.update(challengeProgress).set({
+  await db.insert(challengeProgress).values({
     completed: true,
     challengeId,
     userId,
