@@ -1,15 +1,28 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 'use client'
 
+import Image from 'next/image'
+import { useRouter } from 'next/navigation'
+
 import { useState, useTransition } from 'react'
 
+import { useAudio, useWindowSize } from 'react-use'
+
+import Confetti from 'react-confetti'
+
 import { challengeOptions, challenges } from '@/database/schema'
+
+import { useHeartsModal } from '@/store/use-hearts-modal'
 
 import { Header } from './Header'
 import { QuestionBubble } from './QuestionBubble'
 import { Challenge } from './Challenge'
 import { Footer } from './Footer'
+import { ResultCard } from './ResultCard'
+
 import { upsertChallengeProgress } from '@/actions/upsertChallengeProgress'
+import { reduceHearts } from '@/actions/upsertUserProgress'
+
 import { toast } from 'sonner'
 
 type Props = {
@@ -30,7 +43,24 @@ export default function Quiz({
   initialPercentage,
   userSubscription,
 }: Props) {
+  const { height, width } = useWindowSize()
+
+  const [correctAudio, _c, corrrectControls] = useAudio({
+    src: '/correct.wav',
+  })
+  const [incorrectAudio, _ic, incorrrectControls] = useAudio({
+    src: '/incorrect.wav',
+  })
+  const [finishedAudio] = useAudio({
+    src: '/finish.mp3',
+    autoPlay: true,
+  })
+
+  const router = useRouter()
+
   const [isPending, startTransition] = useTransition()
+
+  const [lesssonId] = useState(initialLessonId)
 
   const [hearts, setHearts] = useState(initialHearts)
 
@@ -49,6 +79,8 @@ export default function Quiz({
 
     return unfinishedIndex === -1 ? 0 : unfinishedIndex
   })
+
+  const { open: openHeartsModel } = useHeartsModal()
 
   const activeChallenge = challenges[activeIndex]
 
@@ -91,10 +123,10 @@ export default function Quiz({
         upsertChallengeProgress(activeChallenge.id)
           .then((response) => {
             if (response?.error === 'hearts') {
-              console.error('Missing Hearts!')
+              openHeartsModel()
               return
             }
-
+            corrrectControls.play()
             setStatus('correct')
             setPercentage((prev) => prev + 100 / challenges.length)
 
@@ -102,14 +134,70 @@ export default function Quiz({
               setHearts((prev) => Math.min(prev + 1, 5))
             }
           })
-          .catch(() =>
-            toast.error('Something went wrong. Please try again later.')
-          )
+          .catch(() => toast.error('Something went wrong. Please try again!'))
       })
     } else {
-      console.log()
+      startTransition(() => {
+        reduceHearts(activeChallenge.id)
+          .then((response) => {
+            if (response?.error === 'hearts') {
+              openHeartsModel()
+              return
+            }
+            incorrrectControls.play()
+            setStatus('wrong')
+
+            if (!response?.error) {
+              setHearts((prev) => Math.max(prev - 1, 0))
+            }
+          })
+          .catch(() => toast.error('Something went wrong. Please try again!'))
+      })
     }
   }
+
+  if (!activeChallenge)
+    return (
+      <>
+        {' '}
+        {finishedAudio}
+        <Confetti
+          recycle={false}
+          numberOfPieces={500}
+          tweenDuration={10000}
+          width={width}
+          height={height}
+        />
+        <div className="flex flex-col gap-y-4 lg:gap-y-8 max-w-lg mx-auto text-center items-center justify-center h-full">
+          <Image
+            src="/finish.svg"
+            alt="finish"
+            className="hidden lg:block"
+            height={100}
+            width={100}
+          />
+          <Image
+            src="/finish.svg"
+            alt="finish"
+            className="lg:hidden block"
+            height={50}
+            width={50}
+          />
+          <h1 className="text-xl lg:text-3xl font-bold text-neutral-700">
+            Great Job! <br /> You&apos;ve completed this lesson.
+          </h1>
+          <div className="flex items-center gap-x-4 w-full">
+            <ResultCard varient="points" value={challenges.length * 10} />
+            <ResultCard varient="hearts" value={hearts} />
+          </div>
+        </div>
+        <Footer
+          lessonId={lesssonId}
+          status="completed"
+          onCheck={() => router.push('/learn')}
+        />
+      </>
+    )
 
   const title =
     activeChallenge.type === 'ASSIST'
@@ -118,11 +206,14 @@ export default function Quiz({
 
   return (
     <>
+      {correctAudio}
+      {incorrectAudio}
       <Header
         hearts={hearts}
         percentage={percentage}
         hasActiveUserSubscription={!!userSubscription?.isActive}
       />
+
       <div className="flex-1">
         <div className="h-full flex justify-center items-center">
           <div className="lg:min-h-[350px] lg:w-[600px] w-full px-6 lg:px-0 flex flex-col gap-y-12">

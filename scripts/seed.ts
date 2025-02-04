@@ -22,9 +22,9 @@ const main = async () => {
     await db.delete(schema.challengeOptions)
     await db.delete(schema.challengeProgress)
 
-    setTimeout(() => console.log('Previous data is deleted....'), 2000)
+    // setTimeout(() => console.log('Previous data is deleted....'), 2000)
 
-    setTimeout(() => console.log('Adding new data....'), 3500)
+    // setTimeout(() => console.log('Adding new data....'), 3500)
 
     await db.insert(schema.courses).values([
       {
@@ -195,7 +195,32 @@ const main = async () => {
       },
     ])
 
-    setTimeout(() => console.log('Seeding Finished....'), 7000)
+    await db.insert(schema.challenges).values([
+      {
+        id: 4,
+        lessonId: 2,
+        type: 'SELECT',
+        order: 1,
+        question: 'Which one these translates to "the man"?',
+      },
+      {
+        id: 5,
+        lessonId: 2,
+        type: 'ASSIST',
+        order: 2,
+        question: 'The Man',
+      },
+      {
+        id: 6,
+        lessonId: 2,
+        type: 'SELECT',
+        order: 3,
+        question: 'Which one these translates to "the robot"?',
+      },
+    ])
+
+    // setTimeout(() => console.log('Seeding Finished....'), 7000)
+    console.log('Seeding Finished....')
   } catch (error) {
     console.log(error)
     throw new Error('Failed to seed the database.')
