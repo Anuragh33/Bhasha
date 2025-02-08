@@ -1,3 +1,4 @@
+'use client'
 import { Menu } from 'lucide-react'
 import {
   Sheet,
@@ -7,13 +8,14 @@ import {
   SheetTrigger,
 } from './ui/sheet'
 import Sidebar from './sidebar'
+import { useState } from 'react'
 
 export default function MobileSidebar() {
   return (
     // SheetTitle, SheetDescription are used here so that will not get errors of Dialoge-Title & Dialoge-Sheet errors on the console.
 
     <Sheet>
-      <SheetTrigger>
+      <SheetTrigger asChild>
         <Menu className="text-white" />
       </SheetTrigger>
 

@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation'
 
 import { useState, useTransition } from 'react'
 
-import { useAudio, useWindowSize } from 'react-use'
+import { useAudio, useMount, useWindowSize } from 'react-use'
 
 import Confetti from 'react-confetti'
 
@@ -24,6 +24,7 @@ import { upsertChallengeProgress } from '@/actions/upsertChallengeProgress'
 import { reduceHearts } from '@/actions/upsertUserProgress'
 
 import { toast } from 'sonner'
+import { usePracticeModal } from '@/store/use-practice-modal'
 
 type Props = {
   initialLessonId: number
@@ -64,7 +65,9 @@ export default function Quiz({
 
   const [hearts, setHearts] = useState(initialHearts)
 
-  const [percentage, setPercentage] = useState(initialPercentage)
+  const [percentage, setPercentage] = useState(() => {
+    return initialPercentage === 100 ? 0 : initialPercentage
+  })
 
   const [challenges] = useState(initialChallenges)
 
@@ -81,6 +84,14 @@ export default function Quiz({
   })
 
   const { open: openHeartsModel } = useHeartsModal()
+
+  const { open: openPracticeModel } = usePracticeModal()
+
+  useMount(() => {
+    if (initialPercentage === 100) {
+      openPracticeModel()
+    }
+  })
 
   const activeChallenge = challenges[activeIndex]
 

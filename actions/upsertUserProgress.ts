@@ -1,12 +1,16 @@
 'use server'
 
+import { revalidatePath } from 'next/cache'
+
+import { auth, currentUser } from '@clerk/nextjs/server'
+
+import { and, eq } from 'drizzle-orm'
+
 import db from '@/database/drizzle'
 import { getCourseById, getUserProgress } from '@/database/queries'
 import { challengeProgress, challenges, userProgress } from '@/database/schema'
-import { auth, currentUser } from '@clerk/nextjs/server'
-import { error } from 'console'
-import { and, eq } from 'drizzle-orm'
-import { revalidatePath } from 'next/cache'
+
+const POINTS_TO_REFILL = 10
 
 export const upsertUserProgress = async (courseId: number) => {
   const { userId } = await auth()
@@ -51,6 +55,7 @@ export const upsertUserProgress = async (courseId: number) => {
 
   revalidatePath('/courses')
   revalidatePath('/learn')
+
   // Using redirect causing an error NEXT_REDIRECT
   //  inplace of two redirect's we are using only one return while using if else statments
   //  The unmodified code can be seen below
@@ -130,4 +135,33 @@ export const reduceHearts = async (challengeId: number) => {
   revalidatePath('/quests')
   revalidatePath('/leaderboard')
   revalidatePath(`/learn/${lessonId}`)
+}
+
+export const refillHearts = async () => {
+  const currentUserProgress = await getUserProgress()
+
+  if (!currentUserProgress) {
+    throw new Error('User progrees not found')
+  }
+
+  if (currentUserProgress.hearts === 5) {
+    throw new Error('User hearts are already full.')
+  }
+
+  if (currentUserProgress.points < POINTS_TO_REFILL) {
+    throw new Error('Not enough points ')
+  }
+
+  await db
+    .update(userProgress)
+    .set({
+      hearts: 5,
+      points: currentUserProgress.points - POINTS_TO_REFILL,
+    })
+    .where(eq(userProgress.userId, currentUserProgress.userId))
+
+  revalidatePath('/shop')
+  revalidatePath('/learn')
+  revalidatePath('/quests')
+  revalidatePath('/leaderboard')
 }

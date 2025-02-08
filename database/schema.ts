@@ -7,6 +7,7 @@ import {
   serial,
   text,
   boolean,
+  timestamp,
 } from 'drizzle-orm/pg-core'
 
 export const courses = pgTable('courses', {
@@ -146,7 +147,7 @@ export const userProgress = pgTable('user_progress', {
     onDelete: 'cascade',
   }),
   hearts: integer('hearts').notNull().default(5),
-  points: integer('points').notNull().default(0),
+  points: integer('points').notNull().default(50),
 })
 
 export const userProgressRelations = relations(userProgress, ({ one }) => ({
@@ -155,3 +156,15 @@ export const userProgressRelations = relations(userProgress, ({ one }) => ({
     references: [courses.id],
   }),
 }))
+
+export const userSubscription = pgTable('userSubscription', {
+  id: serial('id').primaryKey(),
+  isSubscribed: boolean('is_subscribed').notNull().default(false),
+  userId: text('user_id').notNull().unique(),
+  stripeCustomerId: text('stripe_customer_id').notNull().unique(),
+  stripeSubscriptionId: text('stripe_subscription_id').notNull().unique(),
+  stripePriceId: text('stripePriceId').notNull().unique(),
+  stripeCurrentPeriodEnd: timestamp('stripe_current_period_end')
+    .notNull()
+    .unique(),
+})

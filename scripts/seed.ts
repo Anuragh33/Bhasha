@@ -132,21 +132,21 @@ const main = async () => {
         correctOption: true,
         text: 'el hombre',
         audioSrc: '/es_man.mp3',
-        imageSrc: 'man.svg',
+        imageSrc: '/man.svg',
       },
       {
         challengeId: 1,
         correctOption: false,
         text: 'la mujer',
         audioSrc: '/es_woman.mp3',
-        imageSrc: 'woman.svg',
+        imageSrc: '/woman.svg',
       },
       {
         challengeId: 1,
         correctOption: false,
         text: 'el robot',
         audioSrc: '/es_robot.mp3',
-        imageSrc: 'robot.svg',
+        imageSrc: '/robot.svg',
       },
     ])
 
@@ -177,21 +177,21 @@ const main = async () => {
         correctOption: false,
         text: 'el hombre',
         audioSrc: '/es_man.mp3',
-        imageSrc: 'man.svg',
+        imageSrc: '/man.svg',
       },
       {
         challengeId: 3,
         correctOption: false,
         text: 'la mujer',
         audioSrc: '/es_woman.mp3',
-        imageSrc: 'woman.svg',
+        imageSrc: '/woman.svg',
       },
       {
         challengeId: 3,
         correctOption: true,
         text: 'el robot',
         audioSrc: '/es_robot.mp3',
-        imageSrc: 'robot.svg',
+        imageSrc: '/robot.svg',
       },
     ])
 
