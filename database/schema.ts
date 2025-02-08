@@ -159,7 +159,6 @@ export const userProgressRelations = relations(userProgress, ({ one }) => ({
 
 export const userSubscription = pgTable('userSubscription', {
   id: serial('id').primaryKey(),
-  isSubscribed: boolean('is_subscribed').notNull().default(false),
   userId: text('user_id').notNull().unique(),
   stripeCustomerId: text('stripe_customer_id').notNull().unique(),
   stripeSubscriptionId: text('stripe_subscription_id').notNull().unique(),

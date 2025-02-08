@@ -31,7 +31,7 @@ export const createStripeURl = async () => {
 
   const stripeSession = await stripe.checkout.sessions.create({
     mode: 'subscription',
-    payment_method_types: ['card', 'affirm', 'paypal'],
+    payment_method_types: ['card'],
     customer_email: user.emailAddresses[0].emailAddress,
     line_items: [
       {
@@ -50,5 +50,10 @@ export const createStripeURl = async () => {
       },
     ],
     metadata: { userId },
+
+    success_url: returnURL,
+    cancel_url: returnURL,
   })
+
+  return { data: stripeSession.url }
 }

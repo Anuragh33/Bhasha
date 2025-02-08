@@ -1,6 +1,7 @@
 'use client'
 
 import { refillHearts } from '@/actions/upsertUserProgress'
+import { createStripeURl } from '@/actions/userSubscription'
 import { Button } from '@/components/ui/button'
 import Image from 'next/image'
 import { useTransition } from 'react'
@@ -26,7 +27,15 @@ export function Items({ hearts, hasSubscription, points }: Props) {
   }
 
   const onUpgrade = () => {
-    startTransition(() => {})
+    startTransition(() => {
+      createStripeURl()
+        .then((response) => {
+          if (response.data) {
+            window.location.href = response.data
+          }
+        })
+        .catch(() => toast.error('Something went wrong!'))
+    })
   }
 
   return (
@@ -59,8 +68,8 @@ export function Items({ hearts, hasSubscription, points }: Props) {
             Unlimited Hearts
           </p>
         </div>
-        <Button onClick={onUpgrade} disabled={pending || hasSubscription}>
-          {hasSubscription ? 'Active' : 'Upgrade Subscription'}
+        <Button onClick={onUpgrade} disabled={pending}>
+          {hasSubscription ? 'Subscription Settings' : 'Subscribe to Pro'}
         </Button>
       </div>
     </ul>
