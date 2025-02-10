@@ -1,8 +1,11 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { cache } from 'react'
+
 import db from './drizzle'
+import { asc, desc, eq } from 'drizzle-orm'
+
 import { auth } from '@clerk/nextjs/server'
-import { asc, eq } from 'drizzle-orm'
+
 import {
   challengeProgress,
   challenges,
@@ -12,6 +15,8 @@ import {
   userProgress,
   userSubscription,
 } from './schema'
+
+import { DAY_IN_MS } from '@/constants'
 
 export const getCourses = cache(async () => {
   const data = db.query.courses.findMany()
@@ -228,8 +233,6 @@ export const getLessonPercentage = cache(async () => {
 
 ////////////////////////////////////////////////////////////////////////////////////
 
-const DAY_IN_MS = 86_400_000
-
 export const getUserSubscription = cache(async () => {
   const { userId } = await auth()
 
@@ -251,4 +254,27 @@ export const getUserSubscription = cache(async () => {
     ...data,
     isActive: !!isActive,
   }
+})
+
+////////////////////////////////////////////////////////////////////////////////////
+
+export const getTopTenUsers = cache(async () => {
+  const { userId } = await auth()
+
+  if (!userId) {
+    return []
+  }
+
+  const data = await db.query.userProgress.findMany({
+    orderBy: [desc(userProgress.points)],
+    limit: 10,
+    columns: {
+      userId: true,
+      userName: true,
+      userImage: true,
+      points: true,
+    },
+  })
+
+  return data
 })
