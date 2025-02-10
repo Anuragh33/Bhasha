@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import db from '@/database/drizzle'
 import { userSubscription } from '@/database/schema'
 import { stripe } from '@/lib/stripe'

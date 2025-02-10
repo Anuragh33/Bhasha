@@ -4,8 +4,6 @@ import { getUserSubscription } from '@/database/queries'
 import { stripe } from '@/lib/stripe'
 import { absoluteURl } from '@/lib/utils'
 import { auth, currentUser } from '@clerk/nextjs/server'
-import { Description } from '@radix-ui/react-dialog'
-import { Currency } from 'lucide-react'
 
 const returnURL = absoluteURl('/shop')
 

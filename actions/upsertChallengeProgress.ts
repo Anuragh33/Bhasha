@@ -7,7 +7,7 @@ import { auth } from '@clerk/nextjs/server'
 import { and, eq } from 'drizzle-orm'
 
 import db from '@/database/drizzle'
-import { getUserProgress } from '@/database/queries'
+import { getUserProgress, getUserSubscription } from '@/database/queries'
 import { challengeProgress, challenges, userProgress } from '@/database/schema'
 
 export const upsertChallengeProgress = async (challengeId: number) => {
@@ -16,6 +16,7 @@ export const upsertChallengeProgress = async (challengeId: number) => {
   if (!userId) throw new Error('Unauthorized')
 
   const currentUserProgress = await getUserProgress()
+  const userSubscription = await getUserSubscription()
 
   if (!currentUserProgress) {
     throw new Error('User progress not found.')
@@ -40,7 +41,11 @@ export const upsertChallengeProgress = async (challengeId: number) => {
 
   const isPractice = !!existingChallengeProgress
 
-  if (currentUserProgress.hearts === 0 && !isPractice) {
+  if (
+    currentUserProgress.hearts === 0 &&
+    !isPractice &&
+    !userSubscription?.isActive
+  ) {
     return { error: 'hearts' }
   }
 

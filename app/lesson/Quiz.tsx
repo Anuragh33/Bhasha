@@ -10,7 +10,11 @@ import { useAudio, useMount, useWindowSize } from 'react-use'
 
 import Confetti from 'react-confetti'
 
-import { challengeOptions, challenges } from '@/database/schema'
+import {
+  challengeOptions,
+  challenges,
+  userSubscription,
+} from '@/database/schema'
 
 import { useHeartsModal } from '@/store/use-hearts-modal'
 
@@ -30,7 +34,11 @@ type Props = {
   initialLessonId: number
   initialHearts: number
   initialPercentage: number
-  userSubscription: any
+  userSubscription:
+    | (typeof userSubscription.$inferSelect & {
+        isActive: boolean
+      })
+    | null
   initialChallenges: (typeof challenges.$inferSelect & {
     completed: boolean
     challengeOptions: (typeof challengeOptions.$inferSelect)[]
