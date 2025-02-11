@@ -5,21 +5,15 @@ import { FeedWrapper } from '@/components/feed-wrapper'
 import { StickyWrapper } from '@/components/sticky-wrapper'
 import { UserProgress } from '@/components/user-progress'
 
-import {
-  getTopTenUsers,
-  getUserProgress,
-  getUserSubscription,
-} from '@/database/queries'
+import { getUserProgress, getUserSubscription } from '@/database/queries'
 
 export default async function page() {
   const userProgressData = getUserProgress()
   const userSubscriptionData = getUserSubscription()
-  const topTenUsersData = getTopTenUsers()
 
-  const [userProgress, userSubscription, topTenUsers] = await Promise.all([
+  const [userProgress, userSubscription] = await Promise.all([
     userProgressData,
     userSubscriptionData,
-    topTenUsersData,
   ])
 
   if (!userProgress || !userProgress.activeCourse) {
