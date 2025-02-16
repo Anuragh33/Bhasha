@@ -2,7 +2,6 @@ import Image from 'next/image'
 import { redirect } from 'next/navigation'
 
 import { Avatar, AvatarImage } from '@radix-ui/react-avatar'
-import { Separator } from '@radix-ui/react-separator'
 
 import { FeedWrapper } from '@/components/feed-wrapper'
 import { StickyWrapper } from '@/components/sticky-wrapper'
@@ -13,6 +12,10 @@ import {
   getUserProgress,
   getUserSubscription,
 } from '@/database/queries'
+import { Separator } from '@/components/ui/separator'
+
+import { Promo } from '@/components/Promo'
+import { Quests } from '@/components/quests'
 
 export default async function page() {
   const userProgressData = getUserProgress()
@@ -28,6 +31,9 @@ export default async function page() {
   if (!userProgress || !userProgress.activeCourse) {
     redirect('/courses')
   }
+
+  const isPro = !!userSubscription?.isActive
+
   return (
     <div className="flex flex-row-reverse gap-[48px] px-6">
       <StickyWrapper>
@@ -35,8 +41,11 @@ export default async function page() {
           activeProject={userProgress.activeCourse}
           hearts={userProgress.hearts}
           points={userProgress.points}
-          hasActiveSubscription={!!userSubscription?.isActive}
+          hasActiveSubscription={isPro}
         />
+
+        {!isPro && <Promo />}
+        <Quests points={userProgress.points} />
       </StickyWrapper>
       <FeedWrapper>
         <div className="w-full flex flex-col items-center">
@@ -54,6 +63,7 @@ export default async function page() {
           </p>
 
           <Separator className="mb-4 h-0.5 rounded-full " />
+          {/* <div className="w-full rounded-full border-t-2 mb-4" /> */}
           {topTenUsers.map((userProgress, index) => (
             <div
               className="flex items-center p-2 px-4 w-full rounded-xl hover:bg-gray-200/50"

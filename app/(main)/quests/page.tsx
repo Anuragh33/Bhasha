@@ -7,6 +7,11 @@ import { UserProgress } from '@/components/user-progress'
 
 import { getUserProgress, getUserSubscription } from '@/database/queries'
 
+import { Progress } from '@/components/ui/progress'
+import { Promo } from '@/components/Promo'
+
+import { quests } from '@/constants'
+
 export default async function page() {
   const userProgressData = getUserProgress()
   const userSubscriptionData = getUserSubscription()
@@ -19,6 +24,8 @@ export default async function page() {
   if (!userProgress || !userProgress.activeCourse) {
     redirect('/courses')
   }
+
+  const isPro = !!userSubscription?.isActive
   return (
     <div className="flex flex-row-reverse gap-[48px] px-6">
       <StickyWrapper>
@@ -26,8 +33,9 @@ export default async function page() {
           activeProject={userProgress.activeCourse}
           hearts={userProgress.hearts}
           points={userProgress.points}
-          hasActiveSubscription={!!userSubscription?.isActive}
-        />
+          hasActiveSubscription={isPro}
+        />{' '}
+        {!isPro && <Promo />}
       </StickyWrapper>
       <FeedWrapper>
         <div className="w-full flex flex-col items-center">
@@ -38,6 +46,32 @@ export default async function page() {
           <p className="text-muted-foreground text-center text-lg mb-6">
             Complete quests by earning points.
           </p>
+
+          <ul className="w-full">
+            {quests.map((quest) => {
+              const progress = (userProgress.points / quest.value) * 100
+
+              return (
+                <div
+                  key={quest.title}
+                  className="flex items-center w-full p-4 gap-x-4 border-t-2"
+                >
+                  <Image
+                    src="/points.svg"
+                    alt="Points"
+                    height={50}
+                    width={50}
+                  />
+                  <div className="flex flex-col gap-y-2 w-full">
+                    <p className="text-neutral-700 text-lg font-bold">
+                      {quest.title}
+                    </p>
+                    <Progress value={progress} className="h-3 align-super" />
+                  </div>
+                </div>
+              )
+            })}
+          </ul>
         </div>
       </FeedWrapper>
     </div>

@@ -34,7 +34,7 @@ export async function POST(req: Request) {
       session.subscription as string
     )
     if (!session?.metadata?.userId) {
-      return new NextResponse('User ID is required', { status: 200 })
+      return new NextResponse('User ID is required', { status: 400 })
     }
 
     await db.insert(userSubscription).values({

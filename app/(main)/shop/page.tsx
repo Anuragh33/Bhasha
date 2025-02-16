@@ -5,6 +5,8 @@ import { getUserProgress, getUserSubscription } from '@/database/queries'
 import Image from 'next/image'
 import { redirect } from 'next/navigation'
 import { Items } from './Items'
+import { Promo } from '@/components/Promo'
+import { Quests } from '@/components/quests'
 
 export default async function page() {
   const userProgressData = getUserProgress()
@@ -19,6 +21,9 @@ export default async function page() {
   if (!userProgress || !userProgress.activeCourse) {
     redirect('/courses')
   }
+
+  const isPro = !!userSubscription?.isActive
+
   return (
     <div className="flex flex-row-reverse gap-[48px] px-6">
       <StickyWrapper>
@@ -26,8 +31,10 @@ export default async function page() {
           activeProject={userProgress.activeCourse}
           hearts={userProgress.hearts}
           points={userProgress.points}
-          hasActiveSubscription={!!userSubscription?.isActive}
+          hasActiveSubscription={isPro}
         />
+
+        <Quests points={userProgress.points} />
       </StickyWrapper>
       <FeedWrapper>
         <div className="w-full flex flex-col items-center">
