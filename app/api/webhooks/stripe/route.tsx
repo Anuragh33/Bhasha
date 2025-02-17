@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import db from '@/database/drizzle'
 import { userSubscription } from '@/database/schema'
+import { getAdmin } from '@/lib/admin'
 import { stripe } from '@/lib/stripe'
 import { eq } from 'drizzle-orm'
 import { headers } from 'next/headers'
@@ -8,6 +9,11 @@ import { NextResponse } from 'next/server'
 import Stripe from 'stripe'
 
 export async function POST(req: Request) {
+  const isAdmin = await getAdmin()
+
+  if (!isAdmin) {
+    return new NextResponse('Unauthorised', { status: 401 })
+  }
   const body = await req.text()
 
   const signature = (await headers()).get('Stripe-Signature') as string
