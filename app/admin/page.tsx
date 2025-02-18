@@ -1,6 +1,8 @@
-import { getAdmin } from '@/lib/admin'
 import dynamic from 'next/dynamic'
+
 import { redirect } from 'next/navigation'
+
+import { getAdmin } from '@/lib/admin'
 
 const App = dynamic(() => import('./app'), { ssr: !!false })
 
