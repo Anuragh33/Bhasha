@@ -1,13 +1,11 @@
-'use client'
-
 import { getAdmin } from '@/lib/admin'
 import dynamic from 'next/dynamic'
 import { redirect } from 'next/navigation'
 
-const App = dynamic(() => import('./App'), { ssr: false })
+const App = dynamic(() => import('./app'), { ssr: !!false })
 
-export default async function page() {
-  const isAdmin = await getAdmin()
+export default function page() {
+  const isAdmin = getAdmin()
 
   if (!isAdmin) redirect('/')
 

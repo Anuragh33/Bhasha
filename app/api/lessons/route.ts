@@ -1,5 +1,5 @@
 import db from '@/database/drizzle'
-import { courses } from '@/database/schema'
+import { lessons } from '@/database/schema'
 
 import { getAdmin } from '@/lib/admin'
 
@@ -12,7 +12,7 @@ export const GET = async () => {
     return new NextResponse('Unauthorised', { status: 401 })
   }
 
-  const data = await db.query.courses.findMany()
+  const data = await db.query.lessons.findMany()
 
   return NextResponse.json(data)
 }
@@ -27,7 +27,7 @@ export const POST = async (req: Request) => {
   const body = await req.json()
 
   const data = await db
-    .insert(courses)
+    .insert(lessons)
     .values({
       ...body,
     })
