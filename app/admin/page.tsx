@@ -11,4 +11,3 @@ export default function page() {
 
   return <App />
 }
-//adgad
