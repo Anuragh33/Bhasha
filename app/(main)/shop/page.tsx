@@ -5,7 +5,6 @@ import { getUserProgress, getUserSubscription } from '@/database/queries'
 import Image from 'next/image'
 import { redirect } from 'next/navigation'
 import { Items } from './Items'
-import { Promo } from '@/components/Promo'
 import { Quests } from '@/components/quests'
 
 export default async function page() {

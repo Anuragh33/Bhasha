@@ -7,7 +7,7 @@ import { challengeOptions } from '@/database/schema'
 
 export const GET = async (
   req: Request,
-  { params }: { params: { challengeOptionId: number } }
+  { params }: { params: Promise<{ challengeOptionId: number }> }
 ) => {
   const isAdmin = await getAdmin()
 
@@ -25,7 +25,7 @@ export const GET = async (
 
 export const PUT = async (
   req: Request,
-  { params }: { params: { challengeOptionId: number } }
+  { params }: { params: Promise<{ challengeOptionId: number }> }
 ) => {
   const isAdmin = await getAdmin()
 
@@ -49,7 +49,7 @@ export const PUT = async (
 
 export const DELETE = async (
   req: Request,
-  { params }: { params: { challengeOptionId: number } }
+  { params }: { params: Promise<{ challengeOptionId: number }> }
 ) => {
   const isAdmin = await getAdmin()
 

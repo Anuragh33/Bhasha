@@ -8,7 +8,6 @@ import {
   SheetTrigger,
 } from './ui/sheet'
 import Sidebar from './sidebar'
-import { useState } from 'react'
 
 export default function MobileSidebar() {
   return (

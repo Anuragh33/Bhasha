@@ -8,10 +8,11 @@ import { redirect } from 'next/navigation'
 import Quiz from '../Quiz'
 
 type Props = {
-  params: {
+  params: Promise<{
     lessonId: number
-  }
+  }>
 }
+
 export default async function page({ params }: Props) {
   const param = await params
 

@@ -8,7 +8,7 @@ import { UserProgress } from '@/components/user-progress'
 import { getUserProgress, getUserSubscription } from '@/database/queries'
 
 import { Progress } from '@/components/ui/progress'
-import { Promo } from '@/components/Promo'
+import { Promo } from '@/components/promo'
 
 import { quests } from '@/constants'
 

@@ -14,8 +14,8 @@ import {
 } from '@/database/queries'
 import { Separator } from '@/components/ui/separator'
 
-import { Promo } from '@/components/Promo'
 import { Quests } from '@/components/quests'
+import { Promo } from '@/components/promo'
 
 export default async function page() {
   const userProgressData = getUserProgress()

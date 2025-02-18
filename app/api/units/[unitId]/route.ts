@@ -9,7 +9,7 @@ import { getAdmin } from '@/lib/admin'
 
 export const GET = async (
   req: Request,
-  { params }: { params: { unitId: number } }
+  { params }: { params: Promise<{ unitId: number }> }
 ) => {
   const isAdmin = await getAdmin()
 
@@ -30,7 +30,7 @@ export const GET = async (
 
 export const PUT = async (
   req: Request,
-  { params }: { params: { unitId: number } }
+  { params }: { params: Promise<{ unitId: number }> }
 ) => {
   const isAdmin = await getAdmin()
 
@@ -56,7 +56,7 @@ export const PUT = async (
 
 export const DELETE = async (
   req: Request,
-  { params }: { params: { unitId: number } }
+  { params }: { params: Promise<{ unitId: number }> }
 ) => {
   const isAdmin = await getAdmin()
 

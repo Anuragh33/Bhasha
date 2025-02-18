@@ -14,7 +14,7 @@ import {
   getUserProgress,
   getUserSubscription,
 } from '@/database/queries'
-import { Promo } from '@/components/Promo'
+import { Promo } from '@/components/promo'
 import { Quests } from '@/components/quests'
 
 export default async function Learn() {
