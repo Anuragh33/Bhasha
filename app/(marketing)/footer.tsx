@@ -8,7 +8,7 @@ export const Footer = () => {
         {' '}
         <Button size="lg" variant="ghost" className="w-full">
           <Image
-            src="../../public/hr.svg"
+            src="/hr.svg"
             alt="Croatian"
             height={32}
             width={40}
@@ -18,7 +18,7 @@ export const Footer = () => {
         </Button>
         <Button size="lg" variant="ghost" className="w-full">
           <Image
-            src="../../public/fr.svg"
+            src="/fr.svg"
             alt="French"
             height={32}
             width={40}
@@ -28,7 +28,7 @@ export const Footer = () => {
         </Button>{' '}
         <Button size="lg" variant="ghost" className="w-full">
           <Image
-            src="../../public/es.svg"
+            src="/es.svg"
             alt="Spanish"
             height={32}
             width={40}
@@ -38,7 +38,7 @@ export const Footer = () => {
         </Button>{' '}
         <Button size="lg" variant="ghost" className="w-full">
           <Image
-            src="../../public/it.svg"
+            src="/it.svg"
             alt="Italian"
             height={32}
             width={40}
@@ -48,7 +48,7 @@ export const Footer = () => {
         </Button>{' '}
         <Button size="lg" variant="ghost" className="w-full">
           <Image
-            src="../../public/jp.svg"
+            src="/jp.svg"
             alt="Japanese"
             height={32}
             width={40}
@@ -58,7 +58,7 @@ export const Footer = () => {
         </Button>
         <Button size="lg" variant="ghost" className="w-full">
           <Image
-            src="../../public/in.svg"
+            src="/in.svg"
             alt="Hindi"
             height={34}
             width={34}
