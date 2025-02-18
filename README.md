@@ -1,36 +1,78 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+##Bhasha
 
-## Getting Started
+Bhasha is a web application designed to facilitate language learning. Currently, it supports Spanish language learners by providing interactive lessons, quizzes, and progress tracking.
 
-First, run the development server:
+Features
+	•	Interactive Lessons: Engage with comprehensive lessons covering vocabulary, grammar, and pronunciation.
+	•	Quizzes: Test your knowledge with quizzes that reinforce learning objectives.
+	•	Progress Tracking: Monitor your learning journey and achievements over time.
 
-```bash
+Installation
+
+To set up the project locally:
+	1.	Clone the repository:
+
+git clone https://github.com/Anuragh33/Bhasha.git
+
+
+	2.	Navigate to the project directory:
+
+cd Bhasha
+
+
+	3.	Install dependencies:
+
+npm install
+
+
+	4.	Start the development server:
+
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+The application will be available at http://localhost:3000.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Deployment
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Bhasha is deployed using Vercel. To deploy your own instance:
+	1.	Install Vercel CLI:
 
-## Learn More
+npm install -g vercel
 
-To learn more about Next.js, take a look at the following resources:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+	2.	Deploy the application:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+vercel
 
-## Deploy on Vercel
+Follow the prompts to complete the deployment process.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Contributing
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+We welcome contributions to enhance Bhasha. To contribute:
+	1.	Fork the repository.
+	2.	Create a new branch:
+
+git checkout -b feature/YourFeatureName
+
+
+	3.	Make your changes.
+	4.	Commit your changes:
+
+git commit -m 'Add some feature'
+
+
+	5.	Push to the branch:
+
+git push origin feature/YourFeatureName
+
+
+	6.	Open a pull request.
+
+License
+
+This project is licensed under the MIT License. See the LICENSE file for details.
+
+Acknowledgements
+	•	Next.js – React framework used for building the application.
+	•	Vercel – Platform for deployment.
+
+Feel free to customize this README to better fit the specifics of your project.
