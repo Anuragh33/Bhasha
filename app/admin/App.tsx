@@ -13,12 +13,12 @@ import { UnitEdit } from './unit/Edit'
 import { LessonList } from './lesson/List'
 import { LessonCreate } from './lesson/Create'
 import { LessonEdit } from './lesson/Edit'
-import { ChallengeList } from './challenge/list'
-import { ChallengeCreate } from './challenge/create'
-import { ChallengeEdit } from './challenge/edit'
-import { ChallengeOptionList } from './challengeOption/list'
-import { ChallengeOptionCreate } from './challengeOption/create'
-import { ChallengeOptionEdit } from './challengeOption/edit'
+import { ChallengeList } from './challenge/List'
+import { ChallengeCreate } from './challenge/Create'
+import { ChallengeEdit } from './challenge/Edit'
+import { ChallengeOptionList } from './challengeOption/List'
+import { ChallengeOptionCreate } from './challengeOption/Create'
+import { ChallengeOptionEdit } from './challengeOption/Edit'
 
 const dataProvider = simpleRestProvider('/api')
 
