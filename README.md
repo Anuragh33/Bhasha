@@ -1,4 +1,4 @@
-##Bhasha
+## Bhasha
 
 Bhasha is a web application designed to facilitate language learning. Currently, it supports Spanish language learners by providing interactive lessons, quizzes, and progress tracking.
 
